@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Test-time compute &amp; energy — interactive explainer</title>
+<style>
+  :root{
+    --surface-2:#ffffff; --surface-1:#f5f4f0; --surface-0:#faf9f5;
+    --text-primary:#1a1a18; --text-secondary:#605c54; --text-muted:#8a857c;
+    --text-accent:#2f6f5e; --bg-accent:#dfeee8;
+    --text-warning:#9a6212; --bg-warning:#f6e9d2;
+    --text-danger:#9a3328; --bg-danger:#f3dad5;
+    --border:#e3e0d8; --radius:8px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --surface-2:#26241f; --surface-1:#2f2c26; --surface-0:#1c1a16;
+      --text-primary:#f2efe8; --text-secondary:#b8b2a6; --text-muted:#8c867a;
+      --text-accent:#7fc8b2; --bg-accent:#27433b;
+      --text-warning:#e0b46a; --bg-warning:#4a3a1f;
+      --text-danger:#e09084; --bg-danger:#4a2a25;
+      --border:#3c382f;
+    }
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--surface-0); color:var(--text-primary);
+    font-family:var(--font-sans); line-height:1.6;
+    padding:2rem 1rem;
+  }
+  .wrap{ max-width:720px; margin:0 auto; }
+  h1{ font-size:22px; font-weight:500; margin:0 0 0.4rem; }
+  .sub{ font-size:14px; color:var(--text-secondary); margin:0 0 1.75rem; }
+  input[type=range]{ -webkit-appearance:none; appearance:none; height:4px; border-radius:2px; background:var(--border); outline:none; }
+  input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:18px; height:18px; border-radius:50%; background:var(--text-accent); cursor:pointer; border:none; }
+  input[type=range]::-moz-range-thumb{ width:18px; height:18px; border-radius:50%; background:var(--text-accent); cursor:pointer; border:none; }
+  .note{ font-size:12px; color:var(--text-muted); margin-top:2rem; border-top:0.5px solid var(--border); padding-top:1rem; }
+  .note a{ color:var(--text-accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Capability bought with energy</h1>
+  <p class="sub">Within a model, per-query energy scales roughly with the number of tokens generated. Reasoning models produce a large <em>hidden</em> chain-of-thought before the visible answer, so one query can cost many times a direct answer. Drag the slider.</p>
+
+  <div style="display:flex; align-items:center; gap:12px; margin:0 0 1.25rem;">
+    <label for="tok" style="font-size:14px; color:var(--text-secondary); min-width:130px;">Tokens generated</label>
+    <input type="range" id="tok" min="200" max="25000" value="400" step="100" style="flex:1;" />
+    <span id="tokOut" style="font-size:14px; font-weight:500; min-width:64px; text-align:right;">400</span>
+  </div>
+
+  <div style="display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; margin:0 0 1.5rem;">
+    <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
+      <div style="font-size:13px; color:var(--text-secondary);">Energy / query</div>
+      <div id="whOut" style="font-size:24px; font-weight:500;">0.6 Wh</div>
+    </div>
+    <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
+      <div style="font-size:13px; color:var(--text-secondary);">Efficiency</div>
+      <div id="effOut" style="font-size:24px; font-weight:500;">1,667</div>
+      <div style="font-size:12px; color:var(--text-muted);">prompts / kWh</div>
+    </div>
+    <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
+      <div style="font-size:13px; color:var(--text-secondary);">vs direct answer</div>
+      <div id="mulOut" style="font-size:24px; font-weight:500;">2&times;</div>
+    </div>
+  </div>
+
+  <div style="font-size:13px; color:var(--text-secondary); margin:0 0 6px;">One query, split by what you see</div>
+  <div style="display:flex; height:26px; border-radius:var(--radius); overflow:hidden; border:0.5px solid var(--border); margin:0 0 0.4rem;">
+    <div id="visBar" style="background:var(--bg-accent); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--text-accent); white-space:nowrap;">visible</div>
+    <div id="hidBar" style="background:var(--bg-warning); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--text-warning); white-space:nowrap;">hidden reasoning</div>
+  </div>
+  <div style="font-size:12px; color:var(--text-muted); margin:0 0 1.75rem;">The visible answer stays small; the hidden chain-of-thought is what grows.</div>
+
+  <div style="font-size:13px; color:var(--text-secondary); margin:0 0 10px;">Where real models land (energy per query, log scale)</div>
+  <div id="ladder" style="display:flex; flex-direction:column; gap:9px;"></div>
+  <div style="position:relative; height:18px; margin-top:6px; font-size:11px; color:var(--text-muted);">
+    <span style="position:absolute; left:0;">0.1 Wh</span>
+    <span style="position:absolute; left:37%;">1 Wh</span>
+    <span style="position:absolute; left:74%;">10 Wh</span>
+    <span style="position:absolute; right:0;">50 Wh</span>
+  </div>
+
+  <p class="note">Slider is illustrative of within-model scaling (calibrated at ~0.0015 Wh/token, so a ~200-token answer &approx; 0.3 Wh). Reference points are sourced estimates: Median Gemini measured at 0.24 Wh (<a href="https://arxiv.org/abs/2508.15734">Google 2025</a>); GPT-4o ~0.3 Wh (<a href="https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use">Epoch AI</a>); Claude 3.7 0.84–17 Wh and DeepSeek R1 2.25–33.6 Wh (<a href="https://arxiv.org/abs/2505.09598">Jegham et al. 2025</a>; IEA). Numbers use different measurement boundaries and are not strictly comparable across models.</p>
+</div>
+
+<script>
+(function(){
+  var WH_PER_TOKEN = 0.0015;
+  var BASE_TOKENS = 200;
+  var LMIN = Math.log10(0.1), LMAX = Math.log10(50), LRANGE = LMAX - LMIN;
+  function frac(v){ return Math.max(0, Math.min(1, (Math.log10(v)-LMIN)/LRANGE)); }
+  var refs = [
+    {n:"Median Gemini (measured)", v:0.24, c:"var(--text-accent)"},
+    {n:"GPT-4o (estimate)", v:0.30, c:"var(--text-accent)"},
+    {n:"Claude 3.7, short (estimate)", v:0.84, c:"var(--text-secondary)"},
+    {n:"DeepSeek R1, typical", v:2.25, c:"var(--text-warning)"},
+    {n:"Claude 3.7, extended thinking", v:17, c:"var(--text-warning)"},
+    {n:"DeepSeek R1, long reasoning", v:33.6, c:"var(--text-danger)"}
+  ];
+  var ladder = document.getElementById("ladder");
+  ladder.innerHTML = refs.map(function(r){
+    return '<div style="display:flex; align-items:center; gap:10px;">'
+      + '<div style="width:200px; font-size:12px; color:var(--text-secondary); text-align:right;">'+r.n+'</div>'
+      + '<div style="flex:1; position:relative; height:14px; background:var(--surface-1); border-radius:7px;">'
+      + '<div style="position:absolute; left:0; top:0; height:14px; width:'+(frac(r.v)*100).toFixed(1)+'%; background:'+r.c+'; opacity:0.30; border-radius:7px;"></div>'
+      + '<div style="position:absolute; left:'+(frac(r.v)*100).toFixed(1)+'%; top:-2px; width:3px; height:18px; background:'+r.c+'; border-radius:2px;"></div>'
+      + '</div>'
+      + '<div style="width:60px; font-size:12px; font-weight:500; text-align:right;">'+r.v+' Wh</div>'
+      + '</div>';
+  }).join("");
+
+  var tok = document.getElementById("tok");
+  function upd(){
+    var t = +tok.value;
+    var wh = t * WH_PER_TOKEN;
+    var eff = 1000 / wh;
+    var mul = t / BASE_TOKENS;
+    document.getElementById("tokOut").textContent = t.toLocaleString();
+    document.getElementById("whOut").textContent = (wh<1? wh.toFixed(2): wh.toFixed(1)) + " Wh";
+    document.getElementById("effOut").textContent = Math.round(eff).toLocaleString();
+    document.getElementById("mulOut").innerHTML = Math.round(mul) + "&times;";
+    var visPct = Math.max(4, Math.min(100, BASE_TOKENS / t * 100));
+    document.getElementById("visBar").style.width = visPct.toFixed(1) + "%";
+    document.getElementById("hidBar").style.width = (100 - visPct).toFixed(1) + "%";
+    document.getElementById("hidBar").style.display = t > BASE_TOKENS ? "flex" : "none";
+  }
+  tok.addEventListener("input", upd);
+  upd();
+})();
+</script>
+</body>
+</html>
