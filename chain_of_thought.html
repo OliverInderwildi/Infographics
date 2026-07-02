@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chain-of-thought: two feedback loops | Dr. Oliver Inderwildi</title>
+  <meta name="description" content="How chain-of-thought reasoning works as two nested feedback loops — and why the compute and energy it burns can compound so fast." />
+  <link rel="canonical" href="https://oliverinderwildi.github.io/Infographics/chain_of_thought.html" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+:root{--cream:#f0ebe2;--cream-dim:#c8bfb0;--charcoal:#100e0c;--gold:#b8922a;--navy:#002147;--green:#0B341C;--red:#980605;--grey:#505050;--greyl:#E0E0E0;--info:#8a7bc8;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#FFFFFF;color:#1F2E51;line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased;}
+.container{max-width:900px;margin:0 auto;padding:0 2rem;}
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(16,14,12,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,191,176,0.12);}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;}
+.nav-left,.nav-right{display:flex;align-items:center;gap:0.25rem;}
+.nav-center{position:absolute;left:50%;transform:translateX(-50%);}
+.nav-center a{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--cream);text-decoration:none;}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-dim);text-decoration:none;padding:0.5rem 0.85rem;border-radius:6px;transition:all .2s ease;}
+.nav-link:hover{color:var(--cream);background:rgba(184,146,42,0.12);}
+.nav-link.library{color:#5b8a72;border:1px solid #3d6b52;background:rgba(91,138,114,0.08);}
+.nav-link.monitor{color:var(--gold);border:1px solid rgba(184,146,42,0.4);background:rgba(184,146,42,0.1);}
+.nav-link.infographics{color:#8a7bc8;border:1px solid rgba(138,123,200,0.4);background:rgba(138,123,200,0.1);}
+.nav-link.infographics.active{color:#a899e0;background:rgba(138,123,200,0.22);}
+.hero{padding:9rem 0 2rem;}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--navy);margin-bottom:0.9rem;}
+h1{font-weight:700;font-size:clamp(2rem,4.5vw,3rem);color:#1F2E51;line-height:1.1;margin-bottom:1rem;letter-spacing:-0.01em;}
+.lede{font-size:1.15rem;color:#3d3830;max-width:640px;}
+.back{display:inline-block;margin-top:1.4rem;font-family:'JetBrains Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--greyl);padding-bottom:2px;}
+.back:hover{border-color:var(--navy);}
+.fig{margin:2.4rem 0 1rem;}
+.fig img{width:100%;height:auto;display:block;border:1px solid var(--greyl);border-radius:12px;}
+.fig figcaption{font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.05em;color:var(--grey);margin-top:0.8rem;text-align:center;}
+h2{font-weight:700;font-size:1.5rem;color:#1F2E51;margin:2.6rem 0 0.8rem;}
+p{margin:0 0 1rem;color:#3d3830;}
+.lead-in{font-weight:700;color:#1F2E51;}
+.loops{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1.2rem 0;}
+.loops .card{border:1px solid var(--greyl);border-radius:12px;padding:1.3rem 1.5rem;}
+.loops .card.inner{border-top:4px solid var(--navy);}
+.loops .card.outer{border-top:4px solid var(--green);}
+.loops h3{font-weight:700;font-size:1.05rem;margin-bottom:0.5rem;}
+.loops .inner h3{color:var(--navy);}
+.loops .outer h3{color:var(--green);}
+.loops p{font-size:0.95rem;margin:0;}
+.cbox{display:flex;align-items:center;gap:16px;text-decoration:none;border:1.5px solid var(--navy);border-left:6px solid var(--navy);background:#FFFFFF;padding:16px 20px;transition:background .18s ease;margin:2.4rem 0 3.5rem;}
+.cbox:hover{background:#F1F4F9;}
+.cbox .ttl{font-weight:700;font-size:16px;color:var(--navy);}
+.cbox .sub{font-size:12.5px;color:var(--grey);margin-top:2px;}
+.cbox .arr{font-size:20px;color:var(--navy);font-weight:700;margin-left:auto;}
+.footer{background:var(--charcoal);padding:2.2rem 0;}
+.footer .container{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer *{font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;color:rgba(200,191,176,0.4);}
+.footer a{text-decoration:none;}.footer a:hover{color:rgba(200,191,176,0.75);}
+@media(max-width:720px){.loops{grid-template-columns:1fr;}.nav-right{display:none;}}
+  </style>
+</head>
+<body>
+  <nav class="site-nav"><div class="nav-inner">
+    <div class="nav-left">
+      <a href="/GoogleScholar/" class="nav-link library">Library</a>
+      <a href="/Monitor/" class="nav-link monitor">Monitor</a>
+      <a href="/Infographics/" class="nav-link infographics active">Infographics</a>
+    </div>
+    <div class="nav-center"><a href="https://oliverinderwildi.github.io/">Dr Oliver Inderwildi</a></div>
+    <div class="nav-right">
+      <a href="https://oliverinderwildi.github.io/#series" class="nav-link">Articles</a>
+      <a href="https://oliverinderwildi.github.io/#books" class="nav-link">Books</a>
+      <a href="https://oliverinderwildi.github.io/#presence" class="nav-link">Contact</a>
+    </div>
+  </div></nav>
+
+  <header class="hero"><div class="container">
+    <p class="eyebrow">Explainer · Reasoning models</p>
+    <h1>Chain-of-thought: two feedback loops</h1>
+    <p class="lede">A reasoning model doesn't just answer — it thinks in a hidden loop, wrapped inside a second loop with you. Watch how capability is bought, and why the compute can run away.</p>
+    <a class="back" href="/Infographics/">← Back to Infographics</a>
+  </div></header>
+
+  <main class="container">
+    <figure class="fig">
+      <img src="cot_feedback_loops.gif" alt="Animated diagram: a prompt runs through parse, plan, solve and verify inside an algorithmic feedback loop, wrapped in a human-machine loop, while compute and energy counters climb into the red." />
+      <figcaption>Two nested loops — and the compute/energy that compounds with every revise pass.</figcaption>
+    </figure>
+
+    <h2>The inner loop is the thinking</h2>
+    <p>A prompt enters the model, which reasons in hidden steps — parse, plan, solve, verify — before returning a single visible answer. If the result isn't good enough, it loops back and revises. That revise cycle is the <span class="lead-in">algorithmic feedback loop</span>: the model iterating on its own hidden chain-of-thought, sometimes exploring several lines of reasoning in parallel.</p>
+
+    <div class="loops">
+      <div class="card inner"><h3>Algorithmic loop</h3><p>The model's own revise cycle over its hidden reasoning — parse → plan → solve → verify, and back again until it's satisfied.</p></div>
+      <div class="card outer"><h3>Human–machine loop</h3><p>You read the answer, judge it, and refine the prompt — a second, outer loop that steers the whole system.</p></div>
+    </div>
+
+    <h2>Why the compute runs away</h2>
+    <p>Here's the catch. Every pass around the revise loop regenerates the <em>entire</em> hidden chain — and reasoning models often loop many times, in parallel. Because per-query energy scales with the tokens generated, the compute and energy compound fast: a hard query can cost tens of times a direct answer, while the visible reply barely changes. That's the counter climbing into the red at the top of the animation.</p>
+    <p>The upshot: more capability is real, but it isn't free — it's paid for in compute, energy, and ultimately emissions.</p>
+
+    <a class="cbox" href="cot_vs_approaches.html">
+      <span><span class="ttl">Chain-of-thought vs other approaches</span><span class="sub">See how it compares on capability, cost &amp; energy</span></span>
+      <span class="arr" aria-hidden="true">→</span>
+    </a>
+  </main>
+
+  <footer class="footer"><div class="container">
+    <span>&copy; 2026 Dr. Oliver Inderwildi · University of Cambridge</span>
+    <a href="https://oliverinderwildi.github.io/">Home</a>
+  </div></footer>
+</body>
+</html>

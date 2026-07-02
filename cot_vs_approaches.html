@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chain-of-thought vs other approaches | Dr. Oliver Inderwildi</title>
+  <meta name="description" content="How chain-of-thought reasoning compares to other approaches — on capability, cost, latency, and energy." />
+  <link rel="canonical" href="https://oliverinderwildi.github.io/Infographics/cot_vs_approaches.html" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+:root{--ink:#1a1714;--cream:#f0ebe2;--cream-dim:#c8bfb0;--charcoal:#100e0c;--charcoal-mid:#1c1916;--gold:#b8922a;--rule:#d4c9b8;
+--navy:#002147;--green:#0B341C;--gold2:#C49A6C;--red:#980605;--alarm:#FF4C4C;--grey:#505050;--greyl:#E0E0E0;--info:#8a7bc8;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#FFFFFF;color:#1F2E51;line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased;}
+.container{max-width:1000px;margin:0 auto;padding:0 2rem;}
+/* nav */
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(16,14,12,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(200,191,176,0.12);}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;}
+.nav-left,.nav-right{display:flex;align-items:center;gap:0.25rem;}
+.nav-center{position:absolute;left:50%;transform:translateX(-50%);}
+.nav-center a{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--cream);text-decoration:none;}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-dim);text-decoration:none;padding:0.5rem 0.85rem;border-radius:6px;transition:all .2s ease;}
+.nav-link:hover{color:var(--cream);background:rgba(184,146,42,0.12);}
+.nav-link.library{color:#5b8a72;border:1px solid #3d6b52;background:rgba(91,138,114,0.08);}
+.nav-link.monitor{color:var(--gold);border:1px solid rgba(184,146,42,0.4);background:rgba(184,146,42,0.1);}
+.nav-link.infographics{color:#8a7bc8;border:1px solid rgba(138,123,200,0.4);background:rgba(138,123,200,0.1);}
+.nav-link.infographics.active{color:#a899e0;background:rgba(138,123,200,0.22);}
+/* header */
+.hero{padding:9rem 0 2.5rem;}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--navy);margin-bottom:0.9rem;}
+h1{font-weight:700;font-size:clamp(2rem,4.5vw,3rem);color:#1F2E51;line-height:1.1;margin-bottom:1rem;letter-spacing:-0.01em;}
+.lede{font-size:1.15rem;color:#3d3830;max-width:640px;}
+.back{display:inline-block;margin-top:1.5rem;font-family:'JetBrains Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--greyl);padding-bottom:2px;}
+.back:hover{border-color:var(--navy);}
+/* visual placeholder */
+.slot{margin:2.5rem 0;}
+.slot img{width:100%;height:auto;display:block;border:1px solid var(--greyl);border-radius:12px;}
+.slot figcaption{font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.05em;color:var(--grey);margin-top:0.8rem;text-align:center;}
+/* pros cons */
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1rem 0 4rem;}
+.pc .col{border:1px solid var(--greyl);border-radius:12px;padding:1.5rem 1.6rem;}
+.pc .col.pros{border-top:4px solid var(--green);}
+.pc .col.cons{border-top:4px solid var(--red);}
+.pc h3{font-weight:700;font-size:1.1rem;margin-bottom:0.8rem;}
+.pc .pros h3{color:var(--green);}
+.pc .cons h3{color:var(--red);}
+.pc ul{list-style:none;}
+.pc li{position:relative;padding-left:20px;margin:0.55rem 0;font-size:0.95rem;color:#3d3830;line-height:1.5;}
+.pc li::before{position:absolute;left:0;top:0;font-weight:700;}
+.pc .pros li::before{content:'+';color:var(--green);}
+.pc .cons li::before{content:'–';color:var(--red);}
+.footer{background:var(--charcoal);padding:2.2rem 0;}
+.footer .container{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer *{font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;color:rgba(200,191,176,0.4);}
+.footer a{text-decoration:none;}.footer a:hover{color:rgba(200,191,176,0.75);}
+@media(max-width:720px){.pc{grid-template-columns:1fr;}.nav-right{display:none;}}
+  </style>
+</head>
+<body>
+  <nav class="site-nav"><div class="nav-inner">
+    <div class="nav-left">
+      <a href="/GoogleScholar/" class="nav-link library">Library</a>
+      <a href="/Monitor/" class="nav-link monitor">Monitor</a>
+      <a href="/Infographics/" class="nav-link infographics active">Infographics</a>
+    </div>
+    <div class="nav-center"><a href="https://oliverinderwildi.github.io/">Dr Oliver Inderwildi</a></div>
+    <div class="nav-right">
+      <a href="https://oliverinderwildi.github.io/#series" class="nav-link">Articles</a>
+      <a href="https://oliverinderwildi.github.io/#books" class="nav-link">Books</a>
+      <a href="https://oliverinderwildi.github.io/#presence" class="nav-link">Contact</a>
+    </div>
+  </div></nav>
+
+  <header class="hero"><div class="container">
+    <p class="eyebrow">Explainer · Reasoning models</p>
+    <h1>Chain-of-thought vs other approaches</h1>
+    <p class="lede">Chain-of-thought buys capability with compute. How does that trade-off compare with simply answering directly, retrieving facts, or reaching for tools? This page sets them side by side.</p>
+    <a class="back" href="/Infographics/">← Back to Infographics</a>
+  </div></header>
+
+  <main class="container">
+    <figure class="slot">
+      <img src="cot_energy_tradeoff.gif" alt="Animated scatter: capability (Elo proxy) versus energy efficiency (Wh per query) building up across direct answering, retrieval and chain-of-thought, with the leading LLMs spanning all three modes." />
+      <figcaption>Capability rises with the energy each query burns — and most leading models let you dial the mode. (Static version available for print.)</figcaption>
+    </figure>
+
+    <div class="pc">
+      <div class="col pros">
+        <h3>Where chain-of-thought wins</h3>
+        <ul>
+          <li>Stronger on complex, multi-step problems — maths, code, planning.</li>
+          <li>Can self-check and catch its own errors before answering.</li>
+          <li>Parallel sampling of reasoning paths boosts reliability.</li>
+          <li>The intermediate steps are (somewhat) inspectable.</li>
+        </ul>
+      </div>
+      <div class="col cons">
+        <h3>What it costs</h3>
+        <ul>
+          <li>Far higher compute, latency, energy and cost per query.</li>
+          <li>The shown reasoning isn't always faithful to the real computation.</li>
+          <li>Diminishing returns — and "overthinking" on simple prompts.</li>
+          <li>A wrong early step can propagate through the whole chain.</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="container">
+    <span>&copy; 2026 Dr. Oliver Inderwildi · University of Cambridge</span>
+    <a href="https://oliverinderwildi.github.io/">Home</a>
+  </div></footer>
+</body>
+</html>
