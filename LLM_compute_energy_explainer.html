@@ -6,23 +6,13 @@
 <title>Test-time compute &amp; energy — interactive explainer</title>
 <style>
   :root{
-    --surface-2:#ffffff; --surface-1:#f5f4f0; --surface-0:#faf9f5;
+    --surface-2:#ffffff; --surface-1:#efece4; --surface-0:#f9f6f1;
     --text-primary:#1a1a18; --text-secondary:#605c54; --text-muted:#8a857c;
     --text-accent:#2f6f5e; --bg-accent:#dfeee8;
     --text-warning:#9a6212; --bg-warning:#f6e9d2;
     --text-danger:#9a3328; --bg-danger:#f3dad5;
-    --border:#e3e0d8; --radius:8px;
-    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --surface-2:#26241f; --surface-1:#2f2c26; --surface-0:#1c1a16;
-      --text-primary:#f2efe8; --text-secondary:#b8b2a6; --text-muted:#8c867a;
-      --text-accent:#7fc8b2; --bg-accent:#27433b;
-      --text-warning:#e0b46a; --bg-warning:#4a3a1f;
-      --text-danger:#e09084; --bg-danger:#4a2a25;
-      --border:#3c382f;
-    }
+    --border:#ddd8cc; --radius:8px;
+    --font-sans:'Helvetica Neue',Helvetica,Arial,sans-serif;
   }
   *{ box-sizing:border-box; }
   body{
@@ -30,8 +20,9 @@
     font-family:var(--font-sans); line-height:1.6;
     padding:2rem 1rem;
   }
+  @media print{ body{ background:#ffffff; } }
   .wrap{ max-width:720px; margin:0 auto; }
-  h1{ font-size:22px; font-weight:500; margin:0 0 0.4rem; }
+  h1{ font-size:22px; font-weight:600; margin:0 0 0.4rem; }
   .sub{ font-size:14px; color:var(--text-secondary); margin:0 0 1.75rem; }
   input[type=range]{ -webkit-appearance:none; appearance:none; height:4px; border-radius:2px; background:var(--border); outline:none; }
   input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:18px; height:18px; border-radius:50%; background:var(--text-accent); cursor:pointer; border:none; }
@@ -42,8 +33,8 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Capability bought with energy</h1>
-  <p class="sub">Within a model, per-query energy scales roughly with the number of tokens generated. Reasoning models produce a large <em>hidden</em> chain-of-thought before the visible answer, so one query can cost many times a direct answer. Drag the slider.</p>
+  <h1>Capability Requires Energy</h1>
+  <p class="sub">Within a given model, per-query energy scales roughly linearly with the number of tokens generated. Reasoning models emit a large <em>hidden</em> chain-of-thought before the visible answer, so a single query can consume many times the energy of a direct reply. Drag the slider to see the scaling.</p>
 
   <div style="display:flex; align-items:center; gap:12px; margin:0 0 1.25rem;">
     <label for="tok" style="font-size:14px; color:var(--text-secondary); min-width:130px;">Tokens generated</label>
@@ -53,17 +44,17 @@
 
   <div style="display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; margin:0 0 1.5rem;">
     <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
-      <div style="font-size:13px; color:var(--text-secondary);">Energy / query</div>
-      <div id="whOut" style="font-size:24px; font-weight:500;">0.6 Wh</div>
+      <div style="font-size:13px; color:var(--text-secondary);">Energy per query</div>
+      <div id="whOut" style="font-size:24px; font-weight:600;">0.6 Wh</div>
     </div>
     <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
       <div style="font-size:13px; color:var(--text-secondary);">Efficiency</div>
-      <div id="effOut" style="font-size:24px; font-weight:500;">1,667</div>
-      <div style="font-size:12px; color:var(--text-muted);">prompts / kWh</div>
+      <div id="effOut" style="font-size:24px; font-weight:600;">1,667</div>
+      <div style="font-size:12px; color:var(--text-muted);">queries / kWh</div>
     </div>
     <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
-      <div style="font-size:13px; color:var(--text-secondary);">vs direct answer</div>
-      <div id="mulOut" style="font-size:24px; font-weight:500;">2&times;</div>
+      <div style="font-size:13px; color:var(--text-secondary);">vs a direct answer</div>
+      <div id="mulOut" style="font-size:24px; font-weight:600;">2&times;</div>
     </div>
   </div>
 
@@ -83,7 +74,7 @@
     <span style="position:absolute; right:0;">50 Wh</span>
   </div>
 
-  <p class="note">Slider is illustrative of within-model scaling (calibrated at ~0.0015 Wh/token, so a ~200-token answer &approx; 0.3 Wh). Reference points are sourced estimates: Median Gemini measured at 0.24 Wh (<a href="https://arxiv.org/abs/2508.15734">Google 2025</a>); GPT-4o ~0.3 Wh (<a href="https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use">Epoch AI</a>); Claude 3.7 0.84–17 Wh and DeepSeek R1 2.25–33.6 Wh (<a href="https://arxiv.org/abs/2505.09598">Jegham et al. 2025</a>; IEA). Numbers use different measurement boundaries and are not strictly comparable across models.</p>
+  <p class="note">The slider illustrates within-model scaling only, calibrated at ~0.0015 Wh per generated token (so a ~200-token answer &approx; 0.3 Wh); actual consumption depends on model size, hardware, and serving stack. Reference points are independently sourced estimates for the specific models measured: median Gemini at 0.24 Wh (<a href="https://arxiv.org/abs/2508.15734">Google, 2025</a>); GPT-4o ~0.3 Wh (<a href="https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use">Epoch AI, 2025</a>); Claude 3.7 at 0.84–17 Wh and DeepSeek-R1 at 2.25–33.6 Wh (<a href="https://arxiv.org/abs/2505.09598">Jegham et al., 2025</a>; IEA). Measurement boundaries differ, so values are indicative and not strictly comparable across models.</p>
 </div>
 
 <script>
@@ -96,9 +87,9 @@
     {n:"Median Gemini (measured)", v:0.24, c:"var(--text-accent)"},
     {n:"GPT-4o (estimate)", v:0.30, c:"var(--text-accent)"},
     {n:"Claude 3.7, short (estimate)", v:0.84, c:"var(--text-secondary)"},
-    {n:"DeepSeek R1, typical", v:2.25, c:"var(--text-warning)"},
+    {n:"DeepSeek-R1, typical", v:2.25, c:"var(--text-warning)"},
     {n:"Claude 3.7, extended thinking", v:17, c:"var(--text-warning)"},
-    {n:"DeepSeek R1, long reasoning", v:33.6, c:"var(--text-danger)"}
+    {n:"DeepSeek-R1, long reasoning", v:33.6, c:"var(--text-danger)"}
   ];
   var ladder = document.getElementById("ladder");
   ladder.innerHTML = refs.map(function(r){
