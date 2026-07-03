@@ -4,6 +4,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Test-time compute &amp; energy — interactive explainer</title>
+<link rel="icon" href="/favicon.ico" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   :root{
     --surface-2:#ffffff; --surface-1:#efece4; --surface-0:#f9f6f1;
@@ -18,9 +21,22 @@
   body{
     margin:0; background:var(--surface-0); color:var(--text-primary);
     font-family:var(--font-sans); line-height:1.6;
-    padding:2rem 1rem;
+    padding:5rem 1rem 2rem;
   }
-  @media print{ body{ background:#ffffff; } }
+  @media print{ body{ background:#ffffff; padding-top:2rem; } .site-nav{ display:none; } }
+  .site-nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(16,14,12,0.92);border-bottom:1px solid rgba(200,191,176,0.12);}
+  .nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;}
+  .nav-left,.nav-right{display:flex;align-items:center;gap:0.25rem;}
+  .nav-center{position:absolute;left:50%;transform:translateX(-50%);}
+  .nav-center a{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:#f0ebe2;text-decoration:none;}
+  .nav-link{font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#c8bfb0;text-decoration:none;padding:0.5rem 0.85rem;border-radius:6px;}
+  .nav-link:hover{color:#f0ebe2;background:rgba(184,146,42,0.12);}
+  .nav-link.library{color:#5b8a72;border:1px solid #3d6b52;background:rgba(91,138,114,0.08);}
+  .nav-link.monitor{color:#b8922a;border:1px solid rgba(184,146,42,0.4);background:rgba(184,146,42,0.1);}
+  .nav-link.infographics{color:#8a7bc8;border:1px solid rgba(138,123,200,0.4);background:rgba(138,123,200,0.1);}
+  .nav-link.infographics.active{color:#a899e0;background:rgba(138,123,200,0.22);}
+  .back{display:inline-block;margin:0 0 1.25rem;font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-accent);text-decoration:none;}
+  @media(max-width:600px){.nav-right{display:none;}.nav-inner{justify-content:center;padding:0 1rem;}.nav-center{position:static;transform:none;}}
   .wrap{ max-width:720px; margin:0 auto; }
   h1{ font-size:22px; font-weight:600; margin:0 0 0.4rem; }
   .sub{ font-size:14px; color:var(--text-secondary); margin:0 0 1.75rem; }
@@ -32,7 +48,21 @@
 </style>
 </head>
 <body>
+<nav class="site-nav"><div class="nav-inner">
+  <div class="nav-left">
+    <a href="/GoogleScholar/" class="nav-link library">Library</a>
+    <a href="/Monitor/" class="nav-link monitor">Monitor</a>
+    <a href="/Infographics/" class="nav-link infographics active">Infographics</a>
+  </div>
+  <div class="nav-center"><a href="https://oliverinderwildi.github.io/">Dr Oliver Inderwildi</a></div>
+  <div class="nav-right">
+    <a href="https://oliverinderwildi.github.io/#series" class="nav-link">Articles</a>
+    <a href="https://oliverinderwildi.github.io/#books" class="nav-link">Books</a>
+    <a href="https://oliverinderwildi.github.io/#presence" class="nav-link">Contact</a>
+  </div>
+</div></nav>
 <div class="wrap">
+  <a class="back" href="/Infographics/">← Back to Infographics</a>
   <h1>Capability Requires Energy</h1>
   <p class="sub">Within a given model, per-query energy scales roughly linearly with the number of tokens generated. Reasoning models emit a large <em>hidden</em> chain-of-thought before the visible answer, so a single query can consume many times the energy of a direct reply. Drag the slider to see the scaling.</p>
 
