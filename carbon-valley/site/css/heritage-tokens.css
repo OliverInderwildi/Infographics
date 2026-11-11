@@ -1,0 +1,181 @@
+/* Heritage Design System tokens — copied from the Claude Design system (Heritage), 2026-09-26.
+   Shared by the homepage and all article pages. Edit tokens here, not in page CSS.
+   Font: Public Sans (self-hosted) stands in for Helvetica Neue, as in the design system. */
+@font-face{font-family:"Public Sans";font-style:normal;font-weight:100 900;font-display:swap;src:url("../fonts/PublicSans-latin-ext.woff2") format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Public Sans";font-style:normal;font-weight:100 900;font-display:swap;src:url("../fonts/PublicSans-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{--font-heading:"Public Sans","Helvetica Neue",Helvetica,Arial,sans-serif;--font-body:"Public Sans","Helvetica Neue",Helvetica,Arial,sans-serif;--font-mono:ui-monospace,"SF Mono","SFMono-Regular",Menlo,Consolas,monospace}
+:root {
+  /* ---- Base palette (verbatim from the supplied swatches) ---- */
+  --oxford-blue: #002147;      /* deep authoritative primary */
+  --racing-green: #0B341C;     /* British Racing Green */
+  --steel-navy: #1F2E51;       /* Steel / Navy */
+  --sky-blue: #70B3FF;         /* Sky Blue accent */
+  --light-blue: #D6E9FF;       /* Light Blue tint */
+  --orange: #FF9A2B;           /* Orange */
+  --dark-red: #980605;         /* Dark Red */
+  --alarm-red: #FF4C4C;        /* Alarm Red */
+  --leather-brown: #A57C5B;    /* Leather Brown */
+  --antique-gold: #C49A6C;     /* Warm Antique Gold */
+  --muted-purple: #5A2C72;     /* Muted Purple */
+  --grey-dark: #505050;        /* Grey Dark */
+  --grey-medium: #A0A0A0;      /* Grey Medium */
+  --grey-light: #E0E0E0;       /* Grey Light */
+
+  --white: #FFFFFF;
+  --ink: #14181C;              /* near-black, derived for body text on light */
+
+  /* ---- Brand ---- */
+  --brand-primary: var(--oxford-blue);
+  --brand-secondary: var(--racing-green);
+  --brand-accent: var(--orange);
+  --brand-gold: var(--antique-gold);
+  --brand-leather: var(--leather-brown);
+
+  /* ---- Text ---- */
+  --text-strong: var(--oxford-blue);
+  --text-body: #232830;
+  --text-muted: var(--grey-dark);
+  --text-subtle: #8A8A8A;
+  --text-inverse: #FFFFFF;
+  --text-on-accent: #2A1600;   /* dark ink for text on orange/gold */
+  --text-link: var(--steel-navy);
+  --text-link-hover: var(--oxford-blue);
+
+  /* ---- Surfaces ---- */
+  --surface-page: #FAFAF8;
+  --surface-card: #FFFFFF;
+  --surface-sunken: #F2F3F1;
+  --surface-raised: #FFFFFF;
+  --surface-tint: var(--light-blue);
+  --surface-tint-warm: #F6EFE6;   /* leather/gold tint */
+  --surface-inverse: var(--oxford-blue);
+  --surface-inverse-alt: var(--racing-green);
+
+  /* ---- Borders ---- */
+  --border-subtle: #ECEDEA;
+  --border-default: #DADBD7;
+  --border-strong: #BFC0BC;
+  --border-inverse: rgba(255, 255, 255, 0.16);
+  --border-focus: var(--sky-blue);
+
+  /* ---- Semantic states ---- */
+  --success: var(--racing-green);
+  --success-bg: #E7F0E9;
+  --success-border: #B9D3C1;
+
+  --warning: #C56A00;          /* orange darkened for AA text */
+  --warning-accent: var(--orange);
+  --warning-bg: #FFF1DD;
+  --warning-border: #F5D19A;
+
+  --danger: var(--alarm-red);
+  --danger-strong: var(--dark-red);
+  --danger-bg: #FDE9E9;
+  --danger-border: #F5C2C2;
+
+  --info: var(--steel-navy);
+  --info-accent: var(--sky-blue);
+  --info-bg: var(--light-blue);
+  --info-border: #B5D4F5;
+
+  /* ---- Focus ring ---- */
+  --ring: 0 0 0 3px rgba(112, 179, 255, 0.45);
+  --ring-inverse: 0 0 0 3px rgba(112, 179, 255, 0.55);
+}
+:root {
+  /* Weights — Medium (500) for headings & UI labels, Light (300) for prose */
+  --fw-light: 300;    /* @kind font */
+  --fw-regular: 400;  /* @kind font */
+  --fw-medium: 500;   /* @kind font */
+  --fw-bold: 700;     /* @kind font */
+
+  /* Type scale (px) */
+  --text-2xs: 11px;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+  --text-3xl: 36px;
+  --text-4xl: 46px;
+  --text-5xl: 60px;
+  --text-6xl: 76px;
+
+  /* Line heights */
+  --lh-none: 1;        /* @kind other */
+  --lh-tight: 1.12;    /* @kind other */
+  --lh-snug: 1.25;     /* @kind other */
+  --lh-normal: 1.5;    /* @kind other */
+  --lh-relaxed: 1.65;  /* @kind other */
+
+  /* Letter spacing */
+  --tracking-tighter: -0.03em; /* @kind other */
+  --tracking-tight: -0.015em;  /* @kind other */
+  --tracking-normal: 0;        /* @kind other */
+  --tracking-wide: 0.03em;     /* @kind other */
+  /* small-caps eyebrow labels */
+  --tracking-caps: 0.09em;     /* @kind other */
+
+  /* Semantic roles */
+  --font-display: var(--font-heading);
+  --fw-display: var(--fw-medium);  /* @kind font */
+  --fw-heading: var(--fw-medium);  /* @kind font */
+  --fw-label: var(--fw-medium);    /* @kind font */
+  --fw-prose: var(--fw-light);     /* @kind font */
+}
+:root {
+  /* Radii — kept tight for an engineered, heritage feel */
+  --radius-none: 0;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+  --radius-pill: 999px;
+
+  /* Border widths */
+  --border-hair: 1px;   /* @kind other */
+  --border-thick: 2px;  /* @kind other */
+
+  /* Shadows — cool navy-tinted, low spread */
+  --shadow-xs: 0 1px 1px rgba(0, 33, 71, 0.05);
+  --shadow-sm: 0 1px 2px rgba(0, 33, 71, 0.08), 0 1px 1px rgba(0, 33, 71, 0.04);
+  --shadow-md: 0 4px 10px rgba(0, 33, 71, 0.08), 0 1px 3px rgba(0, 33, 71, 0.06);
+  --shadow-lg: 0 12px 28px rgba(0, 33, 71, 0.12), 0 2px 6px rgba(0, 33, 71, 0.06);
+  --shadow-xl: 0 24px 60px rgba(0, 33, 71, 0.18);
+  --shadow-inset: inset 0 1px 2px rgba(0, 33, 71, 0.08);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0.0, 0.0, 1.0);  /* @kind other */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);           /* @kind other */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);       /* @kind other */
+  --dur-fast: 120ms;   /* @kind other */
+  --dur-base: 180ms;   /* @kind other */
+  --dur-slow: 280ms;   /* @kind other */
+}
+:root {
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+  --space-11: 80px;
+  --space-12: 96px;
+  --space-13: 128px;
+
+  /* Layout */
+  --container-sm: 640px;
+  --container-md: 840px;
+  --container-lg: 1080px;
+  --container-xl: 1280px;
+
+  --gutter: var(--space-6);
+  --section-y: var(--space-11);
+}
